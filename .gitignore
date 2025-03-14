@@ -10,34 +10,81 @@
 .svn/
 migrate_working_dir/
 
-# IntelliJ related
+# IntelliJ / Android Studio
 *.iml
 *.ipr
 *.iws
 .idea/
+*.idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
+# VS Code (Optional: Uncomment if you don't want VS Code settings in Git)
 #.vscode/
 
-# Flutter/Dart/Pub related
+# Flutter / Dart / Pub Related
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+.flutter-versions
 .pub-cache/
 .pub/
 /build/
+.melos/
 
-# Symbolication related
-app.*.symbols
+# macOS Related
+**/.DS_Store
+**/.localized
+**/.fseventsd
+**/.Spotlight-V100
 
-# Obfuscation related
-app.*.map.json
+# Windows Related
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Android Studio will place build artifacts here
+# Android Related
+/android/.gradle/
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/local.properties
+/android/.idea/
+/android/captures/
+/android/gradlew
+/android/gradlew.bat
+/android/gradle/
+/android/app/google-services.json
+/android/key.properties
+
+# iOS Related
+ios/.generated
+ios/.symlinks/
+/ios/Pods/
+/ios/.dart_tool/
+/ios/Flutter/Generated.xcconfig
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/*.xcworkspace
+ios/Flutter/*.xcodeproj
+ios/Flutter/*.xcodeproj/*
+
+# Web Related
+web/.dart_tool/
+web/.firebase/
+
+# Firebase Related
+firebase.json
+*.firebaserc
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Symbolication & Obfuscation
+app.*.symbols
+app.*.map.json
+
+# Lock Files (Prevents unnecessary conflicts)
+pubspec.lock
+package-lock.json
