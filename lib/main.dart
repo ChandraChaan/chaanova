@@ -40,6 +40,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String? selectedState;
   String? selectedGender;
+  String? preferredTiming;
   String? preferredMode;
   String? referralSource;
   bool isWhatsAppSame = false;
@@ -48,10 +49,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   // List of States (Modify as needed)
   final List<String> states = [
-    "Andhra Pradesh", "Telangana", "Karnataka", "Tamil Nadu", "Maharashtra"
+    "Andhra Pradesh",
+    "Telangana",
+    "Karnataka",
+    "Tamil Nadu",
+    "Maharashtra"
   ];
 
-  final List<String> learningModes = ["Live Classes", "Recorded Sessions"];
+  final List<String> classTimings = ["Morning", "Afternoon", "Evening"];
   final List<String> referralSources = ["Google", "YouTube", "Social Media", "Friend", "Other"];
 
   // Function to show Date Picker
@@ -208,28 +213,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 const SizedBox(height: 12),
 
+                // Education Background
+                TextFormField(
+                  controller: educationController,
+                  decoration: const InputDecoration(
+                    labelText: "Educational Background",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                  (value == null || value.isEmpty) ? "Enter your education details" : null,
+                ),
+                const SizedBox(height: 12),
+
+                // Learning Goals
+                TextFormField(
+                  controller: learningGoalController,
+                  decoration: const InputDecoration(
+                    labelText: "What do you want to improve?",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                  (value == null || value.isEmpty) ? "Enter your learning goals" : null,
+                ),
+                const SizedBox(height: 12),
+
                 // Terms & Conditions
                 Row(
                   children: [
                     Checkbox(
                       value: isTermsAccepted,
                       onChanged: (value) {
+                        if(value == true) {
+                          _showTermsDialog(context);
+                        }else{
                         setState(() {
                           isTermsAccepted = value!;
-                        });
+                        });}
                       },
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        _showTermsDialog(context);
-                      },
-                      child: const Text(
-                        "I accept the Terms & Conditions",
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue,
-                        ),
-                      ),
+                    const Text(
+                      "I accept the Terms & Conditions",
                     ),
                   ],
                 ),
@@ -273,7 +296,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                setState(() {
+                  isTermsAccepted = true;
+                });
+                    Navigator.pop(context);
+              },
               child: const Text("Accept"),
             ),
           ],
