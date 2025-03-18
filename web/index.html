@@ -34,5 +34,35 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    function openRazorpay(amount, email, contact, name) {
+      var options = {
+        "key": "rzp_live_mqLmBClDIUi83m", // Replace with your Razorpay Key ID
+        "amount": amount * 100, // Convert to paisa (e.g., 500 INR = 50000 paisa)
+        "currency": "INR",
+        "name": name,
+        "description": "Online Class Payment",
+        "prefill": {
+          "email": email,
+          "contact": contact
+        },
+        "theme": {
+          "color": "#F37254"
+        },
+        "handler": function (response) {
+          window.flutter_inappwebview.callHandler('razorpaySuccess', response.razorpay_payment_id);
+        },
+        "modal": {
+          "ondismiss": function() {
+            window.flutter_inappwebview.callHandler('razorpayFailed', "User closed the payment.");
+          }
+        }
+      };
+
+      var rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
 </body>
 </html>
