@@ -50,91 +50,84 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Join Enhance Educations",
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    CustomTextField(
-                      controller: nameController,
-                      label: "Full Name",
-                      icon: Icons.person,
-                    ),
-                    CustomTextField(
-                      controller: emailController,
-                      label: "Email Address",
-                      keyboardType: TextInputType.emailAddress,
-                      icon: Icons.email,
-                    ),
-                    CustomTextField(
-                      controller: phoneController,
-                      label: "Phone Number",
-                      keyboardType: TextInputType.phone,
-                      icon: Icons.phone,
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                            value: isWhatsAppSame,
-                            onChanged: (value) => setState(() => isWhatsAppSame = value!)),
-                        const Text("Same number for WhatsApp?"),
-                      ],
-                    ),
-                    CustomDropdownField(
-                      label: "State",
-                      items: states,
-                      onChanged: (val) => setState(() => selectedState = val),
-                      icon: Icons.location_on,
-                    ),
-                    CustomTextField(
-                      controller: learningGoalController,
-                      label: "What do you want to improve?",
-                      icon: Icons.school,
-                    ),
-                    TermsCheckbox(
-                      isChecked: isTermsAccepted,
-                      onChecked: (value) => _showTermsDialog(),
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _submitForm,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.deepPurple,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          elevation: 6,
-                        ),
-                        child: const Text(
-                          "Register Now",
-                          style: TextStyle(
-                            fontSize: 18,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          "Join Enhance Educations",
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.deepPurple,
                           ),
                         ),
                       ),
-                    ),
-                    // const SizedBox(height: 20),
-                    // Center(
-                    //   child: TextButton(
-                    //     onPressed: () {},
-                    //     child: const Text(
-                    //       "Already have an account? Sign in",
-                    //       style: TextStyle(fontSize: 14, color: Colors.deepPurple),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                      const SizedBox(height: 20),
+                      CustomTextField(
+                        controller: nameController,
+                        label: "Full Name",
+                        icon: Icons.person,
+                      ),
+                      CustomTextField(
+                        controller: emailController,
+                        label: "Email Address",
+                        keyboardType: TextInputType.emailAddress,
+                        icon: Icons.email,
+                      ),
+                      CustomTextField(
+                        controller: phoneController,
+                        label: "Phone Number",
+                        keyboardType: TextInputType.phone,
+                        icon: Icons.phone,
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: isWhatsAppSame,
+                              onChanged: (value) => setState(() => isWhatsAppSame = value!)),
+                          const Text("Same number for WhatsApp?"),
+                        ],
+                      ),
+                      CustomDropdownField(
+                        label: "State",
+                        items: states,
+                        onChanged: (val) => setState(() => selectedState = val),
+                        icon: Icons.location_on,
+                      ),
+                      CustomTextField(
+                        controller: learningGoalController,
+                        label: "What do you want to improve?",
+                        icon: Icons.school,
+                      ),
+                      TermsCheckbox(
+                        isChecked: isTermsAccepted,
+                        onChecked: (value) => _showTermsDialog(),
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _submitForm,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 6,
+                          ),
+                          child: const Text(
+                            "Register Now",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -207,7 +200,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         email: emailController.text,
         phone: phoneController.text,
         wPhone: isWhatsAppSame ? phoneController.text : "",
-        state: selectedState ?? "",
+        state: selectedState ?? "Unknown",
         improve: learningGoalController.text,
         paymentId: 'Started doing payment',
       );
@@ -231,6 +224,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
         },
         onFailure: (error) {
           print("Payment Failed: $error");
+          sendUserDetailsToEmail(
+            name: nameController.text,
+            email: emailController.text,
+            phone: phoneController.text,
+            wPhone: isWhatsAppSame ? phoneController.text : "",
+            state: selectedState ?? "",
+            improve: learningGoalController.text,
+            paymentId: 'Payment failed',
+          );
         },
       );
     }
