@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chaanova/razorpay_web_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:html' as html;
 
 
 /// 🔹 **Registration Page**
@@ -48,7 +49,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Register for Chaanova")),
+      appBar: AppBar(title: const Text("Register for Enhance Educations")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -57,7 +58,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Join Chaanova's English Improvement Classes",
+                Text("Join Enhance Educations - English Improvement Classes",
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 16),
                 _buildTextField(nameController, "Full Name"),
@@ -204,6 +205,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void _submitForm() {
     if (_formKey.currentState!.validate() && isTermsAccepted) {
 
+      sendUserDetailsToEmail(
+        name: nameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        wPhone: isWhatsAppSame ? phoneController.text: "",
+        state: selectedState ?? "",
+        improve: learningGoalController.text,
+        paymentId: 'Started doing payment',
+      );
+
       RazorpayWeb.openPayment(
         amount: 100.0,
         email: emailController.text,
@@ -211,6 +222,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         contact: phoneController.text,
         onSuccess: (paymentId) {
           print("Payment Successful! ID: $paymentId");
+
           sendUserDetailsToEmail(
             name: nameController.text,
             email: emailController.text,
@@ -218,8 +230,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
             wPhone: isWhatsAppSame ? phoneController.text: "",
             state: selectedState ?? "",
             improve: learningGoalController.text,
-            paymentId: 'paymentId',
+            paymentId: paymentId,
           );
+
+          html.window.location.href = "http://enhanceeducations.com/";
         },
         onFailure: (error) {
           print("Payment Failed: $error");

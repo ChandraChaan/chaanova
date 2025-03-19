@@ -12,13 +12,15 @@ class RazorpayWeb {
     // Register success callback
     js.context.callMethod('openRazorpay', [amount, email, contact, name]);
 
-    // Listen for payment success
+    // Listen for successful payment
     js.context['razorpaySuccess'] = (String paymentId) {
+      print("✅ Payment Success: $paymentId");
       onSuccess(paymentId);
     };
 
-    // Listen for payment failure
+    // Listen for failed payment
     js.context['razorpayFailed'] = (String message) {
+      print("❌ Payment Failed: $message");
       onFailure(message);
     };
   }
