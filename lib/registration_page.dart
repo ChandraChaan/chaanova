@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:html' as html;
 
-
 /// 🔹 **Registration Page**
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -20,16 +19,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController educationController = TextEditingController();
   final TextEditingController learningGoalController = TextEditingController();
 
-  String? selectedState,
-      selectedGender,
-      preferredTiming,
-      preferredMode,
-      referralSource;
+  String? selectedState;
   bool isWhatsAppSame = false, isTermsAccepted = false;
-  DateTime? selectedDateOfBirth;
 
   final List<String> states = [
     "Andhra Pradesh",
@@ -38,60 +31,112 @@ class _RegistrationPageState extends State<RegistrationPage> {
     "Tamil Nadu",
     "Maharashtra"
   ];
-  final List<String> referralSources = [
-    "Google",
-    "YouTube",
-    "Social Media",
-    "Friend",
-    "Other"
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Register for Enhance Educations")),
+      appBar: AppBar(
+        title: const Text("Register for Enhance Educations", style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.deepPurple,
+        centerTitle: true,
+        elevation: 4,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Join Enhance Educations - English Improvement Classes",
-                    style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: 16),
-                _buildTextField(nameController, "Full Name"),
-                _buildTextField(emailController, "Email Address",
-                    keyboardType: TextInputType.emailAddress),
-                _buildTextField(phoneController, "Phone Number",
-                    keyboardType: TextInputType.phone),
-                Row(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Checkbox(
-                        value: isWhatsAppSame,
-                        onChanged: (value) =>
-                            setState(() => isWhatsAppSame = value!)),
-                    const Text("Same number for WhatsApp?"),
+                    Center(
+                      child: Text(
+                        "Join Enhance Educations",
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      controller: nameController,
+                      label: "Full Name",
+                      icon: Icons.person,
+                    ),
+                    CustomTextField(
+                      controller: emailController,
+                      label: "Email Address",
+                      keyboardType: TextInputType.emailAddress,
+                      icon: Icons.email,
+                    ),
+                    CustomTextField(
+                      controller: phoneController,
+                      label: "Phone Number",
+                      keyboardType: TextInputType.phone,
+                      icon: Icons.phone,
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: isWhatsAppSame,
+                            onChanged: (value) => setState(() => isWhatsAppSame = value!)),
+                        const Text("Same number for WhatsApp?"),
+                      ],
+                    ),
+                    CustomDropdownField(
+                      label: "State",
+                      items: states,
+                      onChanged: (val) => setState(() => selectedState = val),
+                      icon: Icons.location_on,
+                    ),
+                    CustomTextField(
+                      controller: learningGoalController,
+                      label: "What do you want to improve?",
+                      icon: Icons.school,
+                    ),
+                    TermsCheckbox(
+                      isChecked: isTermsAccepted,
+                      onChecked: (value) => _showTermsDialog(),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Colors.deepPurple,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 6,
+                        ),
+                        child: const Text(
+                          "Register Now",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // const SizedBox(height: 20),
+                    // Center(
+                    //   child: TextButton(
+                    //     onPressed: () {},
+                    //     child: const Text(
+                    //       "Already have an account? Sign in",
+                    //       style: TextStyle(fontSize: 14, color: Colors.deepPurple),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
-                _buildDropdownField(
-                    "State", states, (val) => selectedState = val),
-                _buildTextField(
-                    learningGoalController, "What do you want to improve?"),
-                _buildCheckboxWithDialog(),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14)),
-                    child: const Text("Register Now",
-                        style: TextStyle(fontSize: 16)),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -99,69 +144,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label,
-      {TextInputType? keyboardType}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextFormField(
-        controller: controller,
-        decoration:
-        InputDecoration(labelText: label, border: OutlineInputBorder()),
-        keyboardType: keyboardType,
-        validator: (value) =>
-        value == null || value.isEmpty ? "Enter $label" : null,
-      ),
-    );
-  }
-
-  Widget _buildDropdownField(
-      String label, List<String> items, ValueChanged<String?> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: DropdownButtonFormField<String>(
-        decoration:
-        InputDecoration(labelText: label, border: OutlineInputBorder()),
-        items: items
-            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-            .toList(),
-        onChanged: (value) => setState(() => onChanged(value)),
-        validator: (value) => value == null ? "Select $label" : null,
-      ),
-    );
-  }
-
-  Widget _buildCheckboxWithDialog() {
-    return Row(
-      children: [
-        Checkbox(
-          value: isTermsAccepted,
-          onChanged: (value) => value == true
-              ? _showTermsDialog()
-              : setState(() => isTermsAccepted = value!),
-        ),
-        const Text("I accept the Terms & Conditions"),
-      ],
-    );
-  }
-
   void _showTermsDialog() {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Terms & Conditions"),
-          content: const Text("By registering, you agree to our policies."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() => isTermsAccepted = true);
-                Navigator.pop(context);
-              },
-              child: const Text("Accept"),
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: const Text("Terms & Conditions"),
+        content: const Text("By registering, you agree to our policies."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(() => isTermsAccepted = true);
+              Navigator.pop(context);
+            },
+            child: const Text("Accept"),
+          ),
+        ],
+      ),
     );
   }
 
@@ -204,12 +202,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate() && isTermsAccepted) {
-
       sendUserDetailsToEmail(
         name: nameController.text,
         email: emailController.text,
         phone: phoneController.text,
-        wPhone: isWhatsAppSame ? phoneController.text: "",
+        wPhone: isWhatsAppSame ? phoneController.text : "",
         state: selectedState ?? "",
         improve: learningGoalController.text,
         paymentId: 'Started doing payment',
@@ -221,26 +218,104 @@ class _RegistrationPageState extends State<RegistrationPage> {
         name: nameController.text,
         contact: phoneController.text,
         onSuccess: (paymentId) {
-          print("Payment Successful! ID: $paymentId");
-
           sendUserDetailsToEmail(
             name: nameController.text,
             email: emailController.text,
             phone: phoneController.text,
-            wPhone: isWhatsAppSame ? phoneController.text: "",
+            wPhone: isWhatsAppSame ? phoneController.text : "",
             state: selectedState ?? "",
             improve: learningGoalController.text,
             paymentId: paymentId,
           );
-
           html.window.location.href = "http://enhanceeducations.com/";
         },
         onFailure: (error) {
           print("Payment Failed: $error");
         },
       );
-
-
     }
+  }
+}
+
+/// Custom Text Field Widget
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final TextInputType? keyboardType;
+  final IconData? icon;
+
+  const CustomTextField({
+    required this.controller,
+    required this.label,
+    this.keyboardType,
+    this.icon,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          prefixIcon: icon != null ? Icon(icon, color: Colors.deepPurple,) : null,
+        ),
+        keyboardType: keyboardType,
+        validator: (value) => value == null || value.isEmpty ? "Enter $label" : null,
+      ),
+    );
+  }
+}
+/// Custom Dropdown Field Widget
+class CustomDropdownField extends StatelessWidget {
+  final String label;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
+  final IconData? icon;
+
+  const CustomDropdownField({
+    required this.label,
+    required this.items,
+    required this.onChanged,
+    this.icon,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          prefixIcon: icon != null ? Icon(icon, color: Colors.deepPurple,) : null,
+        ),
+        items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+        onChanged: onChanged,
+        validator: (value) => value == null ? "Select $label" : null,
+      ),
+    );
+  }
+}
+
+/// Terms Checkbox Widget
+class TermsCheckbox extends StatelessWidget {
+  final bool isChecked;
+  final ValueChanged<bool?> onChecked;
+
+  const TermsCheckbox({required this.isChecked, required this.onChecked, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(value: isChecked, onChanged: onChecked),
+        const Text("I accept the Terms & Conditions"),
+      ],
+    );
   }
 }
