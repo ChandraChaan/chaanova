@@ -12,6 +12,10 @@ class YoutubePlayerWidget extends StatefulWidget {
 
 class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   late YoutubePlayerController _controller;
+  bool isPlaying = true;
+  bool isMuted = false;
+  Duration currentDuration = Duration.zero;
+  Duration totalDuration = const Duration(minutes: 1);
 
   @override
   void initState() {
@@ -19,10 +23,22 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
     _controller = YoutubePlayerController.fromVideoId(
       videoId: widget.videoId,
       params: const YoutubePlayerParams(
-          enableJavaScript: false,
-          showFullscreenButton: true,
-          showControls: false),
+        enableJavaScript: true,
+        showFullscreenButton: false, // Hide fullscreen button on video
+        showControls: false, // Hide default YouTube controls
+        playsInline: true,
+      ),
     );
+
+    // Listen for updates in video progress
+    _controller.videoStateStream.listen((state) {
+      if (state.position != currentDuration) {
+        setState(() {
+          currentDuration = state.position;
+          totalDuration = state.duration;
+        });
+      }
+    });
   }
 
   @override
@@ -33,11 +49,79 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
     }
   }
 
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    return "${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerScaffold(
-      controller: _controller,
-      builder: (context, player) => Center(child: player),
+    return Column(
+      children: [
+        // Video Player
+        YoutubePlayerScaffold(
+          controller: _controller,
+          builder: (context, player) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: player,
+              ),
+            );
+          },
+        ),
+
+        // Custom Video Controls
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            children: [
+              // Progress Slider
+              Row(
+                children: [
+                  Text(_formatDuration(currentDuration)),
+                  Expanded(
+                    child: Slider(
+                      value: currentDuration.inSeconds.toDouble(),
+                      max: totalDuration.inSeconds.toDouble(),
+                      onChanged: (value) {
+                        _controller.seekTo(seconds: value);
+                      },
+                    ),
+                  ),
+                  Text(_formatDuration(totalDuration - currentDuration)),
+                ],
+              ),
+
+              // Play/Pause & Mute Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      setState(() {
+                        isPlaying = !isPlaying;
+                        isPlaying ? _controller.play() : _controller.pause();
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(isMuted ? Icons.volume_off : Icons.volume_up),
+                    onPressed: () {
+                      setState(() {
+                        isMuted = !isMuted;
+                        isMuted ? _controller.mute() : _controller.unMute();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
