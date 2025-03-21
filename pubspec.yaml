@@ -40,6 +40,7 @@ dependencies:
   firebase_messaging: ^15.2.4
   flutter_local_notifications: ^18.0.1
   http: ^0.13.4
+  youtube_player_iframe: ^4.0.4
 
 dev_dependencies:
   flutter_test:

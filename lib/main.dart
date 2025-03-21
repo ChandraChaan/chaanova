@@ -1,4 +1,5 @@
 import 'package:chaanova/registration_page.dart';
+import 'package:chaanova/user_view/dashboard_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ class ChaanovaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chaanova',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const RegistrationPage(),
+      home: const DashboardPage(),
     );
   }
 }
