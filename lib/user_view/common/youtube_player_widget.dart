@@ -68,7 +68,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: AspectRatio(
-                aspectRatio: 16 / 9,
+                aspectRatio: 41 / 20,
                 child: player,
               ),
             );

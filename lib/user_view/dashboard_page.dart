@@ -108,7 +108,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     // Video Player Area
                     Expanded(
                       child: Container(
-                        color: Colors.red,
                         padding: const EdgeInsets.all(16.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
