@@ -20,6 +20,10 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   @override
   void initState() {
     super.initState();
+    _initController();
+  }
+
+  void _initController() {
     _controller = YoutubePlayerController.fromVideoId(
       videoId: widget.videoId,
       params: const YoutubePlayerParams(
@@ -31,13 +35,12 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
     );
 
     // Listen for updates in video progress
-    _controller.videoStateStream.listen((state) {
-      if (state.position != currentDuration) {
-        setState(() {
-          currentDuration = state.position;
-          totalDuration = state.duration;
-        });
-      }
+    _controller.videoStateStream.listen((state) async {
+      final durationSeconds = await _controller.duration; // Get video duration
+      setState(() {
+        currentDuration = state.position;
+        totalDuration = Duration(seconds: durationSeconds.toInt()); // Fix this
+      });
     });
   }
 
@@ -86,7 +89,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                       value: currentDuration.inSeconds.toDouble(),
                       max: totalDuration.inSeconds.toDouble(),
                       onChanged: (value) {
-                        _controller.seekTo(seconds: value);
+                        _controller.seekTo(seconds: value.toDouble());
                       },
                     ),
                   ),
@@ -103,7 +106,9 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                     onPressed: () {
                       setState(() {
                         isPlaying = !isPlaying;
-                        isPlaying ? _controller.play() : _controller.pause();
+                        isPlaying
+                            ? _controller.playVideo()
+                            : _controller.pauseVideo(); // FIXED
                       });
                     },
                   ),
