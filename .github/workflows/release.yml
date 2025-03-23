@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: build/web/
-          server-dir: public_html/register_now
+          server-dir: public_html/register_now/
 
       - name: Upload Web Build to GitHub Release
         if: github.event_name == 'release'
