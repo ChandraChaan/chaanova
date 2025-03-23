@@ -1,10 +1,14 @@
 const dummyPlaylist = [
   {
-    "title": "Intro to English",
-    "videoId": "XxVg_s8xAms",
+    "title": "Enhance English Training Center",
+    "videoId": "DaAuuN7v1z8",
   },
   {
-    "title": "Spoken English Practice",
-    "videoId": "bTqVqk7FSmY",
+    "title": "SENTENCE FORMATION",
+    "videoId": "fVxzVeqy_4A",
+  },
+  {
+    "title": "ENGLISH WITHOUT GRAMMAR RULES",
+    "videoId": "EKzuSouDHRQ",
   },
 ];
