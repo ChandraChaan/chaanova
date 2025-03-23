@@ -15,11 +15,15 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.3'
-      #
-      #      - name: Run Flutter Tests
-      #        run: flutter test
 
-      - name: Build Web
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Optional: Run tests
+      # - name: Run Flutter Tests
+      #   run: flutter test
+
+      - name: Build Web (Release)
         run: flutter build web --release --no-tree-shake-icons
 
       - name: FTP Upload Web Build
@@ -28,9 +32,11 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
           local-dir: build/web/
+          server-dir: public_html/register_now
 
-      - name: Upload Web Build to Release
+      - name: Upload Web Build to GitHub Release
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         with:
