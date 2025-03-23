@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+    <!--
+      If you are serving your web app in a path other than the root, change the
+      href value below to reflect the base path you are serving from.
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+      The path provided below has to start and end with a slash "/" in order for
+      it to work correctly.
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+      For more details:
+      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
+      This is a placeholder for base href that will be replaced by the value of
+      the `--base-href` argument provided to `flutter build`.
+    -->
+    <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Chaanova is a powerful online learning platform built with Flutter Web and Firebase, offering seamless online classes, student registration, and secure payment integration. With fast loading times and a real-time loading timer, Chaanova ensures a smooth and engaging learning experience for students and educators alike.">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description"
+          content="Chaanova is a powerful online learning platform built with Flutter Web and Firebase, offering seamless online classes, student registration, and secure payment integration. With fast loading times and a real-time loading timer, Chaanova ensures a smooth and engaging learning experience for students and educators alike.">
 
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="chaanova">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="chaanova">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>chaanova</title>
-  <link rel="manifest" href="manifest.json">
+    <title>chaanova</title>
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
+<script src="flutter_bootstrap.js" async></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
     function openRazorpay(amount, email, contact, name) {
       var options = {
-        "key": "rzp_live_mqLmBClDIUi83m", // Replace with your Razorpay Key ID
+        "key": "rzp_test_xOXw7iTfuggB8H", // Replace with your Razorpay Key ID
         "amount": amount * 100, // Convert to paisa (e.g., 500 INR = 50000 paisa)
         "currency": "INR",
         "name": name,
@@ -51,11 +52,15 @@
           "color": "#F37254"
         },
         "handler": function (response) {
-          window.flutter_inappwebview.callHandler('razorpaySuccess', response.razorpay_payment_id);
+        if (window.razorpaySuccess) {
+          window.razorpaySuccess(response.razorpay_payment_id);
+        }
         },
         "modal": {
           "ondismiss": function() {
-            window.flutter_inappwebview.callHandler('razorpayFailed', "User closed the payment.");
+          if (window.razorpayFailed) {
+            window.razorpayFailed("User closed the payment.");
+          }
           }
         }
       };
@@ -63,6 +68,6 @@
       var rzp = new Razorpay(options);
       rzp.open();
     }
-  </script>
+</script>
 </body>
 </html>

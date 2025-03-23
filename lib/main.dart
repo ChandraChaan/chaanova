@@ -88,7 +88,7 @@ class ChaanovaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chaanova',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const DashboardPage(),
+      home: const RegistrationPage(),
     );
   }
 }

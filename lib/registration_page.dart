@@ -195,15 +195,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate() && isTermsAccepted) {
-      sendUserDetailsToEmail(
-        name: nameController.text,
-        email: emailController.text,
-        phone: phoneController.text,
-        wPhone: isWhatsAppSame ? phoneController.text : "",
-        state: selectedState ?? "Unknown",
-        improve: learningGoalController.text,
-        paymentId: 'Started doing payment',
-      );
 
       RazorpayWeb.openPayment(
         amount: 100.0,
@@ -220,19 +211,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             improve: learningGoalController.text,
             paymentId: paymentId,
           );
+
+          print('payment done');
           html.window.location.href = "http://enhanceeducations.com/";
         },
         onFailure: (error) {
           print("Payment Failed: $error");
-          sendUserDetailsToEmail(
-            name: nameController.text,
-            email: emailController.text,
-            phone: phoneController.text,
-            wPhone: isWhatsAppSame ? phoneController.text : "",
-            state: selectedState ?? "",
-            improve: learningGoalController.text,
-            paymentId: 'Payment failed',
-          );
         },
       );
     }

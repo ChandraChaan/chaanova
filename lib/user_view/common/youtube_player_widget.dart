@@ -28,8 +28,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
       videoId: widget.videoId,
       params: const YoutubePlayerParams(
         enableJavaScript: true,
-        showFullscreenButton: false, // Hide fullscreen button on video
-        showControls: false, // Hide default YouTube controls
+        showControls: false,
         playsInline: true,
       ),
     );
@@ -87,9 +86,15 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                   Expanded(
                     child: Slider(
                       value: currentDuration.inSeconds.toDouble(),
+                      min: 0,
                       max: totalDuration.inSeconds.toDouble(),
                       onChanged: (value) {
-                        _controller.seekTo(seconds: value.toDouble());
+                        setState(() {
+                          currentDuration = Duration(seconds: value.toInt());
+                        });
+                      },
+                      onChangeEnd: (value) {
+                        _controller.seekTo(seconds: value);
                       },
                     ),
                   ),
