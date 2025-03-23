@@ -67,8 +67,8 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Chaanova - Online Classes",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          "Enhance - Online Classes",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         backgroundColor: Colors.blueGrey[800],
         elevation: 5,

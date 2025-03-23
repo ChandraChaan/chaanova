@@ -17,21 +17,10 @@ class MobileClassUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // 🎥 Video Player
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: YoutubePlayerWidget(videoId: selectedVideoId),
-            ),
-          ),
-        ),
+        // 🎥 Video Player (Top)
+        YoutubePlayerWidget(videoId: selectedVideoId),
 
-        const SizedBox(height: 10),
-
-        // 🎵 Playlist Section Title
+        // 🎵 Playlist Title
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
@@ -50,15 +39,12 @@ class MobileClassUI extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        // 🎞️ Horizontal Playlist
-        Container(
-          height: 100,
-          margin: const EdgeInsets.only(bottom: 12),
+        // 📃 Playlist (Vertical Scrollable)
+        Expanded(
           child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             itemCount: playlist.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final item = playlist[index];
               final isSelected = item['videoId'] == selectedVideoId;
@@ -66,28 +52,25 @@ class MobileClassUI extends StatelessWidget {
               return GestureDetector(
                 onTap: () => onVideoSelected(item['videoId']!),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: 180,
-                  padding: const EdgeInsets.all(8),
+                  duration: const Duration(milliseconds: 250),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Colors.amber.withOpacity(0.2)
                         : Colors.blueGrey[800],
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected ? Colors.amber : Colors.transparent,
+                      width: 1.5,
+                    ),
                     boxShadow: [
                       if (isSelected)
                         BoxShadow(
                           color: Colors.amber.withOpacity(0.4),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
                         ),
                     ],
-                    border: Border.all(
-                      color: isSelected
-                          ? Colors.amber
-                          : Colors.transparent,
-                      width: 1.5,
-                    ),
                   ),
                   child: Row(
                     children: [
@@ -96,12 +79,12 @@ class MobileClassUI extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
                           'https://img.youtube.com/vi/${item['videoId']}/0.jpg',
-                          width: 60,
+                          width: 100,
                           height: 60,
                           fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       // Title
                       Expanded(
                         child: Text(
@@ -109,11 +92,10 @@ class MobileClassUI extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: isSelected
-                                ? Colors.amber
-                                : Colors.white,
+                            color:
+                            isSelected ? Colors.amber : Colors.white,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            fontSize: 13,
                           ),
                         ),
                       ),
