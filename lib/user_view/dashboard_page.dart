@@ -16,7 +16,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<List<Map<String, String>>> fetchYouTubeVideos() async {
     const apiUrl =
-        'https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId=UCdBiq4YsDqFGBrX1s1JCc4w&maxResults=100&key=AIzaSyCoaEo4-jRKUXhLTIWmxd1AFTqCeanAo5g';
+        'https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId=UCZbAhPj18mNveRPnZE6YDvg&maxResults=100&key=AIzaSyCoaEo4-jRKUXhLTIWmxd1AFTqCeanAo5g';
 
     final response = await http.get(Uri.parse(apiUrl));
 
