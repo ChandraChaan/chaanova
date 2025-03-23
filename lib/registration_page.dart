@@ -153,129 +153,161 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Register for Enhance Educations",
+          "Enhance Educations",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
         centerTitle: true,
         elevation: 4,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          "Join Enhance Educations",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth > 700;
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 700),
+                child: Card(
+                  elevation: 12,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: Text(
+                              "Join Enhance Educations",
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.deepPurple,
                               ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        controller: nameController,
-                        label: "Full Name",
-                        icon: Icons.person,
-                      ),
-                      CustomTextField(
-                        controller: emailController,
-                        label: "Email Address",
-                        keyboardType: TextInputType.emailAddress,
-                        icon: Icons.email,
-                      ),
-                      CustomTextField(
-                        controller: phoneController,
-                        label: "Phone Number",
-                        keyboardType: TextInputType.phone,
-                        icon: Icons.phone,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isWhatsAppSame,
-                              onChanged: (value) =>
-                                  setState(() => isWhatsAppSame = value!)),
-                          const Text("Same number for WhatsApp?"),
-                        ],
-                      ),
-                      CustomDropdownField(
-                        label: "State",
-                        items: states,
-                        onChanged: (val) => setState(() => selectedState = val),
-                        icon: Icons.location_on,
-                      ),
-                      CustomTextField(
-                        controller: learningGoalController,
-                        label: "What do you want to improve?",
-                        icon: Icons.school,
-                      ),
-                      TermsCheckbox(
-                        isChecked: isTermsAccepted,
-                        onChecked: (value) => _showTermsDialog(),
-                      ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _submitForm,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: Colors.deepPurple,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            elevation: 6,
-                          ),
-                          child: const Text(
-                            "Register Now",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
                             ),
                           ),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          const SizedBox(height: 24),
-                          const Text("Already Registered?",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: loginEmailController,
-                            decoration: const InputDecoration(
-                                labelText: 'Enter your email to login'),
+                          const SizedBox(height: 32),
+                          CustomTextField(
+                            controller: nameController,
+                            label: "Full Name",
+                            icon: Icons.person,
+                          ),
+                          const SizedBox(height: 12),
+                          CustomTextField(
+                            controller: emailController,
+                            label: "Email Address",
+                            keyboardType: TextInputType.emailAddress,
+                            icon: Icons.email,
+                          ),
+                          const SizedBox(height: 12),
+                          CustomTextField(
+                            controller: phoneController,
+                            label: "Phone Number",
+                            keyboardType: TextInputType.phone,
+                            icon: Icons.phone,
                           ),
                           const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: isWhatsAppSame,
+                                onChanged: (value) => setState(() => isWhatsAppSame = value!),
+                              ),
+                              const Text("Same number for WhatsApp?"),
+                            ],
+                          ),
+                          CustomDropdownField(
+                            label: "State",
+                            items: states,
+                            onChanged: (val) => setState(() => selectedState = val),
+                            icon: Icons.location_on,
+                          ),
+                          const SizedBox(height: 12),
+                          CustomTextField(
+                            controller: learningGoalController,
+                            label: "What do you want to improve?",
+                            icon: Icons.school,
+                          ),
+                          const SizedBox(height: 12),
+                          TermsCheckbox(
+                            isChecked: isTermsAccepted,
+                            onChecked: (value) => _showTermsDialog(),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: _submitForm,
+                            icon: const Icon(Icons.arrow_forward),
+                            label: const Text(
+                              "Register Now",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 6,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+
+                          const SizedBox(height: 36),
+                          Divider(
+                            height: 2,
+                            color: Colors.grey.shade400,
+                            thickness: 1,
+                          ),
+                          const SizedBox(height: 24),
+
+                          Center(
+                            child: Text(
+                              "Already Registered?",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: loginEmailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.email_outlined),
+                              labelText: "Enter your email to login",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: checkLoginEmail,
-                            child: const Text("Login"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade800,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(fontSize: 16, color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
