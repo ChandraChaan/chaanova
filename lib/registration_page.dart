@@ -317,7 +317,55 @@ class _RegistrationPageState extends State<RegistrationPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Terms & Conditions"),
-        content: const Text("By registering, you agree to our policies."),
+        content: SizedBox(
+          height: 400,
+          width: 300,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Welcome to Enhance Educations (“we”, “our”, or “us”). By accessing or using our website and services, you agree to comply with and be bound by the following terms and conditions.",
+                ),
+                SizedBox(height: 8),
+                Text("1. Registration and Account", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Anyone can register; no age restriction. "
+                    "If under 18, parental guidance is recommended. "
+                    "You must provide accurate info and keep your login secure."),
+                SizedBox(height: 8),
+                Text("2. Courses and Access", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Access is granted after payment. Content is for personal use only. Validity: 3 months."),
+                SizedBox(height: 8),
+                Text("3. Payment", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Payments are via Razorpay in INR. We do not store your payment details."),
+                SizedBox(height: 8),
+                Text("4. Refund and Cancellation", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Refunds only if: (1) payment made but access not granted in 48 hrs, or (2) duplicate payment. "
+                    "Request within 7 days. Processed in 7–10 working days."),
+                SizedBox(height: 8),
+                Text("5. User Conduct", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Misuse of platform or content may lead to account suspension without refund."),
+                SizedBox(height: 8),
+                Text("6. Intellectual Property", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• All content is owned by Enhance Educations. No sharing or duplication."),
+                SizedBox(height: 8),
+                Text("7. Limitation of Liability", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• No guarantees on course outcomes. We are not liable for tech issues."),
+                SizedBox(height: 8),
+                Text("8. Privacy Policy", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• We collect info like name, email, phone, course usage. "
+                    "Used for registration, support, and improvements. "
+                    "We do not share or sell your data. Secure practices are followed."),
+                SizedBox(height: 8),
+                Text("9. Changes", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• We may change these terms. Continued use implies agreement."),
+                SizedBox(height: 8),
+                Text("10. Contact", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("• Email: enhancetraining9@gmail.com"),
+              ],
+            ),
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
