@@ -29,7 +29,11 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
       params: const YoutubePlayerParams(
         enableJavaScript: true,
         showControls: false,
+        showFullscreenButton: false,
         playsInline: true,
+        showVideoAnnotations: false,
+        strictRelatedVideos: true,
+        pointerEvents: PointerEvents.none,
       ),
     );
 
@@ -68,7 +72,16 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
               padding: const EdgeInsets.all(16.0),
               child: AspectRatio(
                 aspectRatio: 41 / 20,
-                child: player,
+                child: Stack(
+                  children: [
+                    player, // the iframe-based YouTube player
+                    const Positioned.fill(
+                      child: HtmlElementView(
+                        viewType: 'transparent-blocker',
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },

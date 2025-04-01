@@ -1,3 +1,5 @@
+import 'dart:ui_web' as ui;
+import 'dart:html' as html;
 import 'package:chaanova/registration_page.dart';
 import 'package:chaanova/user_view/dashboard_page.dart';
 import 'package:chaanova/user_view/startup_checker.dart';
@@ -24,6 +26,21 @@ void main() async {
 
   // // Firebase Notification Setup
   // await _setupFirebaseMessaging();
+  ui.platformViewRegistry.registerViewFactory(
+    'transparent-blocker',
+        (int viewId) {
+      final blocker = html.DivElement()
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.position = 'absolute'
+        ..style.top = '0'
+        ..style.left = '0'
+        ..style.zIndex = '9999'
+        ..style.backgroundColor = 'transparent'
+        ..style.pointerEvents = 'auto'; // This blocks interaction
+      return blocker;
+    },
+  );
 
   runApp(const ChaanovaApp());
 }
