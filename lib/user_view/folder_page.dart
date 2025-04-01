@@ -26,7 +26,8 @@ class _FolderPageState extends State<FolderPage> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final fetched = (data['items'] as List).map<Map<String, String>>((item) {
+        final fetched =
+        (data['items'] as List).map<Map<String, String>>((item) {
           final snippet = item['snippet'];
           return {
             'id': item['id'],
@@ -61,13 +62,14 @@ class _FolderPageState extends State<FolderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: () => Navigator.of(context).maybePop(),
-        // ),
-        title: const Text('Enhance - Online Classes', style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Enhance - Online Classes',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blueGrey[900],
         elevation: 4,
       ),
@@ -75,10 +77,77 @@ class _FolderPageState extends State<FolderPage> {
           ? const Center(child: CircularProgressIndicator())
           : playlists.isEmpty
           ? const Center(child: Text("No playlists found."))
+          : isMobile
+          ? ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: playlists.length,
+        itemBuilder: (context, index) {
+          final playlist = playlists[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DashboardPage(
+                    playListId: playlist['id']!,
+                    playListName: playlist['title']!,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[800],
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                    offset: Offset(2, 2),
+                  )
+                ],
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        bottomLeft: Radius.circular(12)),
+                    child: Image.network(
+                      playlist['thumbnail']!,
+                      width: 120,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        playlist['title'] ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      )
           : GridView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: playlists.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate:
+        const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
@@ -91,7 +160,10 @@ class _FolderPageState extends State<FolderPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DashboardPage(playListId: playlist['id']!, playListName:playlist['title']!),
+                  builder: (_) => DashboardPage(
+                    playListId: playlist['id']!,
+                    playListName: playlist['title']!,
+                  ),
                 ),
               );
             },
