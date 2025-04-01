@@ -1,3 +1,6 @@
+import 'dart:ui_web' as ui; // ✅ Fix deprecated platformViewRegistry
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -20,6 +23,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   @override
   void initState() {
     super.initState();
+    _registerTransparentOverlay();
     _initController();
   }
 
@@ -33,18 +37,41 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
         playsInline: true,
         showVideoAnnotations: false,
         strictRelatedVideos: true,
-        pointerEvents: PointerEvents.none,
+        pointerEvents: PointerEvents.none, // disables iframe interaction
       ),
     );
 
-    // Listen for updates in video progress
     _controller.videoStateStream.listen((state) async {
-      final durationSeconds = await _controller.duration; // Get video duration
+      final durationSeconds = await _controller.duration;
       setState(() {
         currentDuration = state.position;
-        totalDuration = Duration(seconds: durationSeconds.toInt()); // Fix this
+        totalDuration = Duration(seconds: durationSeconds.toInt());
       });
     });
+  }
+
+  void _registerTransparentOverlay() {
+    // Register only once
+    ui.platformViewRegistry.registerViewFactory(
+      'transparent-blocker',
+          (int viewId) {
+        final blocker = html.DivElement()
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..style.position = 'absolute'
+          ..style.top = '0'
+          ..style.left = '0'
+          ..style.zIndex = '9999'
+          ..style.backgroundColor = 'transparent'
+          ..style.pointerEvents = 'auto'; // blocks interaction
+        return blocker;
+      },
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    return "${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}";
   }
 
   @override
@@ -55,44 +82,43 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
     }
   }
 
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    return "${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}";
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Column(
       children: [
-        // Video Player
         YoutubePlayerScaffold(
           controller: _controller,
           builder: (context, player) {
             return Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(12.0),
               child: AspectRatio(
-                aspectRatio: 41 / 20,
-                child: Stack(
-                  children: [
-                    player, // the iframe-based YouTube player
-                    const Positioned.fill(
-                      child: HtmlElementView(
-                        viewType: 'transparent-blocker',
+                aspectRatio: 41/20,
+                child: Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: player,
                       ),
-                    ),
-                  ],
+                      const HtmlElementView(viewType: 'transparent-blocker'),
+                    ],
+                  ),
                 ),
               ),
             );
           },
         ),
 
-        // Custom Video Controls
+        // Custom Controls
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Column(
             children: [
-              // Progress Slider
               Row(
                 children: [
                   Text(_formatDuration(currentDuration)),
@@ -114,8 +140,6 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                   Text(_formatDuration(totalDuration - currentDuration)),
                 ],
               ),
-
-              // Play/Pause & Mute Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -124,9 +148,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                     onPressed: () {
                       setState(() {
                         isPlaying = !isPlaying;
-                        isPlaying
-                            ? _controller.playVideo()
-                            : _controller.pauseVideo(); // FIXED
+                        isPlaying ? _controller.playVideo() : _controller.pauseVideo();
                       });
                     },
                   ),
