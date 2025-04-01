@@ -1,4 +1,5 @@
 import 'package:chaanova/user_view/dashboard_page.dart';
+import 'package:chaanova/user_view/folder_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chaanova/razorpay_web_service.dart';
@@ -115,7 +116,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const DashboardPage()),
+          MaterialPageRoute(builder: (_) => const FolderPage()),
         );
       } else {
         // ❌ No match
@@ -438,7 +439,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           print('payment done');
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const DashboardPage()),
+            MaterialPageRoute(builder: (_) => const FolderPage()),
           );
         },
         onFailure: (error) {

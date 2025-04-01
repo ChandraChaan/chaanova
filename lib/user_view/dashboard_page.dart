@@ -8,18 +8,22 @@ import 'desktop_class_ui.dart';
 import 'mobile_class_ui.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  final String playListId;
+
+  const DashboardPage({super.key, required this.playListId});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String selectedVideoId = 'DaAuuN7v1z8';
+  String selectedVideoId = '';
+  List<Map<String, String>> playlist = [];
+  bool isLoading = false;
 
-  Future<List<Map<String, String>>> fetchYouTubeVideos() async {
-    const apiUrl =
-        'https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId=UCZbAhPj18mNveRPnZE6YDvg&maxResults=100&key=AIzaSyCoaEo4-jRKUXhLTIWmxd1AFTqCeanAo5g';
+  Future<List<Map<String, String>>> fetchYouTubeVideos(String playlistId) async {
+    final apiUrl =
+        'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyCoaEo4-jRKUXhLTIWmxd1AFTqCeanAo5g';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -27,11 +31,11 @@ class _DashboardPageState extends State<DashboardPage> {
       final data = jsonDecode(response.body);
 
       final videos = (data['items'] as List)
-          .where((item) => item['id']?['videoId'] != null)
+          .where((item) => item['snippet']?['resourceId']?['videoId'] != null)
           .map<Map<String, String>>((item) {
         return {
           "title": item['snippet']['title'],
-          "videoId": item['id']['videoId'],
+          "videoId": item['snippet']['resourceId']['videoId'],
         };
       }).toList();
 
@@ -41,25 +45,24 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  List<Map<String, String>> playlist = [];
+  Future<void> loadVideos() async {
+    try {
+      setState(() => isLoading = true);
+      playlist = await fetchYouTubeVideos(widget.playListId);
+      if (playlist.isNotEmpty) {
+        selectedVideoId = playlist.first['videoId']!;
+      }
+      setState(() => isLoading = false);
+    } catch (e) {
+      print("❌ Failed to load videos: $e");
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     loadVideos();
-  }
-
-  Future<void> loadVideos() async {
-    try {
-      playlist = await fetchYouTubeVideos();
-      // dummyPlaylist.clear();
-      // dummyPlaylist.addAll(playlist);
-      selectedVideoId = playlist.first['videoId']!;
-
-      setState(() {});
-    } catch (e) {
-      print("❌ Failed to load videos: $e");
-    }
   }
 
   @override
@@ -73,7 +76,9 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: Colors.blueGrey[800],
         elevation: 5,
       ),
-      body: LayoutBuilder(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : LayoutBuilder(
         builder: (context, constraints) {
           bool isMobile = constraints.maxWidth < 800;
           return isMobile

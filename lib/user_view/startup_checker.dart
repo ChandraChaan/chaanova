@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../registration_page.dart';
 import 'dashboard_page.dart';
+import 'folder_page.dart';
 
 class StartupChecker extends StatefulWidget {
   const StartupChecker({super.key});
@@ -25,7 +26,7 @@ class _StartupCheckerState extends State<StartupChecker> {
     if (hasPaid) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const DashboardPage()),
+        MaterialPageRoute(builder: (_) => const FolderPage()),
       );
       return;
     } else {
