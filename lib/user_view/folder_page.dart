@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'dashboard_page.dart';
 
 class FolderPage extends StatefulWidget {
@@ -20,7 +19,7 @@ class _FolderPageState extends State<FolderPage> {
 
     const channelId = 'UCZbAhPj18mNveRPnZE6YDvg';
     const apiKey = 'AIzaSyCoaEo4-jRKUXhLTIWmxd1AFTqCeanAo5g';
-    final url =
+    const url =
         'https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=$channelId&maxResults=50&key=$apiKey';
 
     try {
@@ -44,9 +43,11 @@ class _FolderPageState extends State<FolderPage> {
       }
     } catch (e) {
       print("❌ Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load playlists')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load playlists: $e')),
+        );
+      }
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -62,11 +63,18 @@ class _FolderPageState extends State<FolderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Folders'),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).maybePop(),
+        // ),
+        title: const Text('Enhance - Online Classes', style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.blueGrey[900],
+        elevation: 4,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
+          : playlists.isEmpty
+          ? const Center(child: Text("No playlists found."))
           : GridView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: playlists.length,
@@ -80,13 +88,15 @@ class _FolderPageState extends State<FolderPage> {
           final playlist = playlists[index];
           return GestureDetector(
             onTap: () {
-              print("📂 Clicked playlist: ${playlist['title']}");
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => DashboardPage(playListId: "${playlist['id']}",)),
+                MaterialPageRoute(
+                  builder: (_) => DashboardPage(playListId: playlist['id']!, playListName:playlist['title']!),
+                ),
               );
             },
-            child: Container(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
               decoration: BoxDecoration(
                 color: Colors.blueGrey[800],
                 borderRadius: BorderRadius.circular(12),

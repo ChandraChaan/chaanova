@@ -4,11 +4,13 @@ import 'common/youtube_player_widget.dart';
 class MobileClassUI extends StatelessWidget {
   final List<Map<String, String>> playlist;
   final String selectedVideoId;
+  final String playListName;
   final Function(String) onVideoSelected;
 
   const MobileClassUI({
     required this.playlist,
     required this.selectedVideoId,
+    required this.playListName,
     required this.onVideoSelected,
     super.key,
   });
@@ -24,10 +26,10 @@ class MobileClassUI extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            children: const [
+            children:  [
               Text(
-                "Class Playlist",
-                style: TextStyle(
+                playListName,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,

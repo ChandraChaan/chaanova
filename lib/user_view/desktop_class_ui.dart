@@ -5,11 +5,13 @@ import 'common/youtube_player_widget.dart';
 class DesktopClassUI extends StatelessWidget {
   final List<Map<String, String>> playlist;
   final String selectedVideoId;
+  final String playListName;
   final Function(String) onVideoSelected;
 
   const DesktopClassUI({
     required this.playlist,
     required this.selectedVideoId,
+    required this.playListName,
     required this.onVideoSelected,
     super.key,
   });
@@ -25,11 +27,11 @@ class DesktopClassUI extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+               Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Class Playlist",
-                  style: TextStyle(
+                  playListName,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

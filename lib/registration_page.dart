@@ -48,7 +48,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         selectedState == null ||
         !isTermsAccepted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill all fields and accept the terms")),
+        const SnackBar(content: Text("Please fill all fields and accept the terms")),
       );
       return;
     }
@@ -65,11 +65,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ Registration details saved!")),
+        const SnackBar(content: Text("✅ Registration details saved!")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Failed to save: \$e")),
+        const SnackBar(content: Text("❌ Failed to save: \$e")),
       );
     }
   }
@@ -318,13 +318,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Terms & Conditions"),
-        content: SizedBox(
+        content: const SizedBox(
           height: 400,
           width: 300,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   "Welcome to Enhance Educations (“we”, “our”, or “us”). By accessing or using our website and services, you agree to comply with and be bound by the following terms and conditions.",
                 ),
@@ -473,7 +473,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           prefixIcon: icon != null
               ? Icon(
                   icon,
@@ -511,7 +511,7 @@ class CustomDropdownField extends StatelessWidget {
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           prefixIcon: icon != null
               ? Icon(
                   icon,

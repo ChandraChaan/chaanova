@@ -9,8 +9,9 @@ import 'mobile_class_ui.dart';
 
 class DashboardPage extends StatefulWidget {
   final String playListId;
+  final String playListName;
 
-  const DashboardPage({super.key, required this.playListId});
+  const DashboardPage({super.key, required this.playListId, required this.playListName});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -55,6 +56,9 @@ class _DashboardPageState extends State<DashboardPage> {
       setState(() => isLoading = false);
     } catch (e) {
       print("❌ Failed to load videos: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to load videos")),
+      );
       setState(() => isLoading = false);
     }
   }
@@ -69,6 +73,10 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text(
           "Enhance - Online Classes",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
@@ -78,12 +86,15 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
+          : playlist.isEmpty
+          ? const Center(child: Text("No videos found in this playlist."))
           : LayoutBuilder(
         builder: (context, constraints) {
           bool isMobile = constraints.maxWidth < 800;
           return isMobile
               ? MobileClassUI(
             playlist: playlist,
+            playListName: widget.playListName,
             selectedVideoId: selectedVideoId,
             onVideoSelected: (id) => setState(() {
               selectedVideoId = id;
@@ -91,6 +102,7 @@ class _DashboardPageState extends State<DashboardPage> {
           )
               : DesktopClassUI(
             playlist: playlist,
+            playListName: widget.playListName,
             selectedVideoId: selectedVideoId,
             onVideoSelected: (id) => setState(() {
               selectedVideoId = id;
