@@ -23,7 +23,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _registerTransparentOverlay();
+    // _registerTransparentOverlay();
     _initController();
   }
 
@@ -32,12 +32,12 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
       videoId: widget.videoId,
       params: const YoutubePlayerParams(
         enableJavaScript: true,
-        showControls: false,
-        showFullscreenButton: false,
+        showControls: true,
+        showFullscreenButton: true,
         playsInline: true,
         showVideoAnnotations: false,
         strictRelatedVideos: true,
-        pointerEvents: PointerEvents.none, // disables iframe interaction
+        // pointerEvents: PointerEvents.none, // disables iframe interaction
       ),
     );
 
@@ -50,24 +50,24 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
     });
   }
 
-  void _registerTransparentOverlay() {
-    // Register only once
-    ui.platformViewRegistry.registerViewFactory(
-      'transparent-blocker',
-          (int viewId) {
-        final blocker = html.DivElement()
-          ..style.width = '100%'
-          ..style.height = '100%'
-          ..style.position = 'absolute'
-          ..style.top = '0'
-          ..style.left = '0'
-          ..style.zIndex = '9999'
-          ..style.backgroundColor = 'transparent'
-          ..style.pointerEvents = 'auto'; // blocks interaction
-        return blocker;
-      },
-    );
-  }
+  // void _registerTransparentOverlay() {
+  //   // Register only once
+  //   ui.platformViewRegistry.registerViewFactory(
+  //     'transparent-blocker',
+  //         (int viewId) {
+  //       final blocker = html.DivElement()
+  //         ..style.width = '100%'
+  //         ..style.height = '100%'
+  //         ..style.position = 'absolute'
+  //         ..style.top = '0'
+  //         ..style.left = '0'
+  //         ..style.zIndex = '9999'
+  //         ..style.backgroundColor = 'transparent'
+  //         ..style.pointerEvents = 'auto'; // blocks interaction
+  //       return blocker;
+  //     },
+  //   );
+  // }
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -105,7 +105,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                         borderRadius: BorderRadius.circular(12),
                         child: player,
                       ),
-                      const HtmlElementView(viewType: 'transparent-blocker'),
+                      // const HtmlElementView(viewType: 'transparent-blocker'),
                     ],
                   ),
                 ),
