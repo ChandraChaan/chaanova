@@ -93,10 +93,11 @@ class _SiteClosedPageState extends State<SiteClosedPage> with SingleTickerProvid
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.lock_outline,
-                        size: 80,
-                        color: Colors.white,
+                      child:Image.asset(
+                        'assets/images/animation_lock.gif',
+                        height: 150,
+                        width: 150,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -118,7 +119,7 @@ class _SiteClosedPageState extends State<SiteClosedPage> with SingleTickerProvid
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'This project has been permanently closed due to project funding and business closure issues.\nWe appreciate your time, support, and understanding.',
+                    'This project has been permanently closed due to business closure issues.\nWe appreciate your time, support, and understanding.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -127,23 +128,32 @@ class _SiteClosedPageState extends State<SiteClosedPage> with SingleTickerProvid
                     ),
                   ),
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _launchPortfolio,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyanAccent.withOpacity(0.9),
-                      foregroundColor: Colors.black,
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  ScaleTransition(
+                    scale: Tween(begin: 1.0, end: 1.05).animate(
+                      CurvedAnimation(
+                        parent: _controller,
+                        curve: const Interval(0.8, 1.0, curve: Curves.easeInOut),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                     ),
-                    child: const Text(
-                      'View My Portfolio',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
+                    child: ElevatedButton(
+                      onPressed: _launchPortfolio,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyanAccent.withOpacity(0.95),
+                        foregroundColor: Colors.black,
+                        elevation: 12,
+                        shadowColor: Colors.cyanAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      ),
+                      child: const Text(
+                        'View My Portfolio',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                        ),
                       ),
                     ),
                   ),
